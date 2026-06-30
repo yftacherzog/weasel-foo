@@ -70,6 +70,14 @@ function resetSimulation() {
     renderDisplay();
 }
 
+// If the input is empty or just spaces when they try to run it, set some none-empty value
+function ensureValidTarget() {
+    if (targetPhrase.trim() === "") {
+        targetInput.value = "WEASEL";
+        resetSimulation();
+    }
+}
+
 // BUTTON LOGIC 1: Complete independent random regeneration
 function executeRandomStep() {
     stopAutoRun(); // Kill autorun loop if active
@@ -133,14 +141,20 @@ function stopAutoRun() {
 
 // Event Binding Listeners
 targetInput.addEventListener('input', resetSimulation);
-btnRandom.addEventListener('click', executeRandomStep);
+btnRandom.addEventListener('click', () => {
+    ensureValidTarget();
+    executeRandomStep();
+});
+
 btnWeasel.addEventListener('click', () => {
     stopAutoRun();
+    ensureValidTarget();
     executeWeaselStep();
 });
 
 autoRunCheck.addEventListener('change', (e) => {
     if (e.target.checked) {
+        ensureValidTarget();
         startAutoRun();
     } else {
         stopAutoRun();
